@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: demo-03
+  name: kdemo-svc
+spec:
+  selector:
+    name: kdemo
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 30003
