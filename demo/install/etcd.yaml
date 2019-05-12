@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubernetes.io/config.hash: c14158649eaf9a939cf8dd5704304272
+    kubernetes.io/config.mirror: c14158649eaf9a939cf8dd5704304272
+    kubernetes.io/config.seen: "2019-05-29T18:52:34.594641863+08:00"
+    kubernetes.io/config.source: file
+  creationTimestamp: "2019-05-29T10:53:58Z"
+  labels:
+    component: etcd
+    tier: control-plane
+  name: etcd-node1
+  namespace: kube-system
+  resourceVersion: "580"
+  selfLink: /api/v1/namespaces/kube-system/pods/etcd-node1
+  uid: 0fb39fb3-8200-11e9-9d82-001c42db43b8
+spec:
+  containers:
+  - command:
+    - etcd
+    - --advertise-client-urls=https://10.211.55.8:2379
+    - --cert-file=/etc/kubernetes/pki/etcd/server.crt
+    - --client-cert-auth=true
+    - --data-dir=/var/lib/etcd
+    - --initial-advertise-peer-urls=https://10.211.55.8:2380
+    - --initial-cluster=node1=https://10.211.55.8:2380
+    - --key-file=/etc/kubernetes/pki/etcd/server.key
+    - --listen-client-urls=https://127.0.0.1:2379,https://10.211.55.8:2379
+    - --listen-peer-urls=https://10.211.55.8:2380
+    - --name=node1
+    - --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt
+    - --peer-client-cert-auth=true
+    - --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
+    - --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+    - --snapshot-count=10000
+    - --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
+    image: registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.3.10
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      exec:
+        command:
+        - /bin/sh
+        - -ec
+        - ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt
+          --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+          get foo
+      failureThreshold: 8
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 15
+    name: etcd
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/lib/etcd
+      name: etcd-data
+    - mountPath: /etc/kubernetes/pki/etcd
+      name: etcd-certs
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostNetwork: true
+  nodeName: node1
+  priority: 2000000000
+  priorityClassName: system-cluster-critical
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    operator: Exists
+  volumes:
+  - hostPath:
+      path: /etc/kubernetes/pki/etcd
+      type: DirectoryOrCreate
+    name: etcd-certs
+  - hostPath:
+      path: /var/lib/etcd
+      type: DirectoryOrCreate
+    name: etcd-data
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2019-05-29T10:52:35Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2019-05-29T10:52:37Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2019-05-29T10:52:37Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2019-05-29T10:52:35Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://99ab32da5f031244b753ea455a7fb6c7a01c742e163d5b54502c5c30a6d98c7d
+    image: registry.cn-hangzhou.aliyuncs.com/google_containers/etcd:3.3.10
+    imageID: docker-pullable://registry.cn-hangzhou.aliyuncs.com/google_containers/etcd@sha256:240bd81c2f54873804363665c5d1a9b8e06ec5c63cfc181e026ddec1d81585bb
+    lastState: {}
+    name: etcd
+    ready: true
+    restartCount: 0
+    state:
+      running:
+        startedAt: "2019-05-29T10:52:36Z"
+  hostIP: 10.211.55.8
+  phase: Running
+  podIP: 10.211.55.8
+  qosClass: BestEffort
+  startTime: "2019-05-29T10:52:35Z"
